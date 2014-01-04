@@ -44,7 +44,7 @@ class TestExcelExcelBlackBoxEvaluator(unittest.TestCase):
 
     def test_evaluate(self):
         sheet = "sheet1"
-        input_parameters = {"a": ("B2", sheet), "b": ("B3", sheet), "theta": ("B41", sheet)}
+        input_parameters = {"a": ("B2", sheet), "b": ("B3", sheet), "theta": ("B4", sheet)}
         output_parameters = {"feval": ("C2", sheet)}
         workbook_name = "test_workbook.xlsx"
 
