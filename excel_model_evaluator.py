@@ -44,6 +44,9 @@ class ExcelDriverCOM(ExcelDriver):
     def __init__(self):
         self.excel = win32.gencache.EnsureDispatch("Excel.Application")
         self.worksheets = {}
+        self.workbook = None
+        self.worksheet = None
+        self.current_worksheet_name = None
 
     def open_workbook(self, file_name):
         self.workbook = self.excel.Workbooks.open(file_name)
@@ -51,7 +54,6 @@ class ExcelDriverCOM(ExcelDriver):
     def set_worksheet(self, worksheet_name="Sheet1"):
         self.current_worksheet_name = worksheet_name
         self.worksheet = self.workbook.Worksheets(worksheet_name)
-
         self.worksheets[worksheet_name] = self.worksheet
 
     def _set_cell_value(self, cell_address, value_to_set, worksheet_name):
