@@ -18,7 +18,7 @@ so to allow further analysis of the input.
 
 
 try:
-    import win32
+    from win32com.client import Dispatch
 except ImportError:
     pass
 
@@ -37,16 +37,23 @@ class ExcelDriver(object):
     def read_cell_value(self, cell_address, worksheet_name=None):
         return self._read_cell_value(cell_address, worksheet_name)
 
+    def reset(self):
+        self._reset()
+
 
 class ExcelDriverCOM(ExcelDriver):
     """Driver that utilizes the COM interface in Microsoft Windows to script Excel"""
 
     def __init__(self):
-        self.excel = win32.gencache.EnsureDispatch("Excel.Application")
+        self.excel = Dispatch("Excel.Application")
         self.worksheets = {}
         self.workbook = None
         self.worksheet = None
         self.current_worksheet_name = None
+
+    def _reset(self):
+        self.workbook.Close(0)
+        self.excel.Application.Quit()
 
     def open_workbook(self, file_name):
         self.workbook = self.excel.Workbooks.open(file_name)
@@ -89,6 +96,9 @@ class ExcelDriverDummy(ExcelDriver):
         self.excel_function = excel_function
         self.excel_cell_value_to_update = excel_cell_value_to_update
 
+    def _reset(self):
+        pass
+
     def _update_model(self):
         self.excel_dict[self.excel_cell_value_to_update] = self.excel_function(self.excel_dict)
 
@@ -120,6 +130,9 @@ class ExcelBlackBoxEvaluator(object):
         self.output_variable_dict = output_variable_dict
         self.excel_driver = excel_driver()
         self.excel_driver.open_workbook(self.excel_workbook_file_name)
+
+    def close(self):
+        self.excel_driver.reset()
 
     def evaluate(self, input_parameters):
         """{"a": 5.0"}"""
