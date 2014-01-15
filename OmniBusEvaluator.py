@@ -115,9 +115,9 @@ def main(input_spreadsheet_path, csv_output_file_name):
                                                 result_list += [result_dict[output_variable]]
 
                                             csv_writer.writerow([i + 1] + row_to_write + result_list)
-                                            if i == 5001:
-                                                excel_black_obj.close()
-                                                exit()
+                                            # if i == 5001:
+                                            #     excel_black_obj.close()
+                                            #     exit()
 
                                             i += 1
 
