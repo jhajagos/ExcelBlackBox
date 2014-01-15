@@ -34,7 +34,7 @@ output_dict = {"10-Year ASCVD Risk (%)" : ("B13", "Omnibus"),
 }
 
 ranges_to_evaluate = {"Sex": ("M", "F"),
-                      "Age years": (45,50,55,60,65),
+                      "Age years": (35,45,50,55,60,65),
                       "Race": ("AA","WH"),
                       "Total Cholesterol": (130, 150, 180, 200, 225, 320),
                       "HDL-Cholesterol": (40, 60, 80, 100),
@@ -61,8 +61,6 @@ def main(input_spreadsheet_path, csv_output_file_name):
 
     print("Will make %s evaluations of the spreadsheet" % total_evals_i)
 
-
-
     i = 0
     sex = ranges_to_evaluate["Sex"]
     age_years = ranges_to_evaluate["Age years"]
@@ -73,8 +71,6 @@ def main(input_spreadsheet_path, csv_output_file_name):
     bpt = ranges_to_evaluate["Treatment of High Blood Pressure"]
     diabetes = ranges_to_evaluate["Diabetes"]
     smoker = ranges_to_evaluate["Smoker"]
-
-
 
     with open(csv_output_file_name, "wb") as fw:
         csv_writer = csv.writer(fw)
@@ -106,9 +102,11 @@ def main(input_spreadsheet_path, csv_output_file_name):
                                                 if i == 0:
                                                     pass
                                                 else:
+                                                    print("Processed %s evaluations" % (i + 1,))
                                                     excel_black_obj.close()
 
-                                                excel_black_obj = ExcelBlackBoxEvaluator(input_dict, output_dict, input_spreadsheet_path, ExcelDriverCOM)
+                                                excel_black_obj = ExcelBlackBoxEvaluator(input_dict, output_dict,
+                                                                                         input_spreadsheet_path, ExcelDriverCOM)
 
                                             result_dict = excel_black_obj.evaluate(dict_to_evaluate)
 
@@ -116,8 +114,8 @@ def main(input_spreadsheet_path, csv_output_file_name):
                                             for output_variable in output_order_to_read:
                                                 result_list += [result_dict[output_variable]]
 
-                                            csv_writer.writerow([i] + row_to_write + result_list)
-                                            if i == 201:
+                                            csv_writer.writerow([i + 1] + row_to_write + result_list)
+                                            if i == 5001:
                                                 excel_black_obj.close()
                                                 exit()
 
@@ -128,6 +126,6 @@ if __name__ == "__main__":
     if len(sys.argv) == 3:
         main(sys.argv[1],sys.argv[2])
     else:
-        main("C:\\Users\\Administrator\\Desktop\\Copy of Omnibus Spreadsheet NEW.xls","C:\\temp\\cardiac_risk_eval.csv")
+        main("C:\\Users\\Administrator\\Desktop\\Copy of Omnibus Spreadsheet NEW.xls", "C:\\temp\\cardiac_risk_eval.csv")
 
 
